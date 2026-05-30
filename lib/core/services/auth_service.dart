@@ -1,3 +1,5 @@
+import '../../models/user_model.dart';
+import 'firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -32,7 +34,22 @@ class AuthService {
 
       // Step 4: Sign in with Firebase
       final UserCredential userCredential =
-      await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(
+        credential,
+      );
+
+      final user = userCredential.user;
+
+      if (user != null) {
+        await FirestoreService().saveUser(
+          UserModel(
+            uid: user.uid,
+            email: user.email ?? '',
+            name: user.displayName ?? '',
+            photoUrl: user.photoURL ?? '',
+          ),
+        );
+      }
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
