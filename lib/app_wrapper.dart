@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'viewmodels/auth/auth_viewmodel.dart';
 import 'viewmodels/connectivity/connectivity_viewmodel.dart';
 
+import 'views/auth/login_screen.dart';
+import 'views/home/home_screen.dart';
 import 'views/no_internet/no_internet_screen.dart';
 
 class AppWrapper extends StatelessWidget {
@@ -12,22 +15,25 @@ class AppWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        child,
+    return Consumer2<AuthViewModel, ConnectivityViewModel>(
+      builder: (context, auth, connectivity, _) {
 
-        Selector<ConnectivityViewModel, bool>(
-          selector: (_, provider) => provider.isConnected,
+        final isLoggedIn = auth.isLoggedIn;
 
-          builder: (context, isConnected, _) {
-            if (isConnected) {
-              return const SizedBox();
-            }
+        return Stack(
+          children: [
+            // ✅ Main screen logic (UNCHANGED LOGIC)
+            isLoggedIn ? const HomeScreen() : const LoginScreen(),
 
-            return const NoInternetScreen();
-          },
-        ),
-      ],
+            // ✅ Safe overlay (no crash)
+            if (!connectivity.isConnected)
+              const NoInternetScreen(),
+
+            // optional child (safe usage)
+            child,
+          ],
+        );
+      },
     );
   }
 }

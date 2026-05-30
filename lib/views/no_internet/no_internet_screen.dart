@@ -1,150 +1,164 @@
 import 'package:flutter/material.dart';
 
-class NoInternetScreen extends StatelessWidget {
-  const NoInternetScreen({super.key});
+class NoInternetScreen extends StatefulWidget {
+  final VoidCallback? onRetry;
+
+  const NoInternetScreen({super.key, this.onRetry});
+
+  @override
+  State<NoInternetScreen> createState() => _NoInternetScreenState();
+}
+
+class _NoInternetScreenState extends State<NoInternetScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _pulseAnimation;
+  bool _isRetrying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleRetry() async {
+    if (_isRetrying) return;
+    setState(() => _isRetrying = true);
+    await Future.delayed(const Duration(milliseconds: 1500));
+    widget.onRetry?.call();
+    if (mounted) setState(() => _isRetrying = false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFF8FAFC), Color(0xFFE2E8F0)],
-
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
+      body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-
+            padding: const EdgeInsets.symmetric(horizontal: 36),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: [
-                // WIFI ICON CONTAINER
-                Container(
-                  width: 130,
-                  height: 130,
-
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-
-                    borderRadius: BorderRadius.circular(35),
-
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
-
-                        blurRadius: 25,
-                        offset: const Offset(0, 10),
+                // Animated icon
+                AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _pulseAnimation.value,
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    width: 110,
+                    height: 110,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFF0F3FF),
+                      border: Border.all(
+                        color: const Color(0xFFDDE3FF),
+                        width: 1.5,
                       ),
-                    ],
-                  ),
-
-                  child: const Icon(
-                    Icons.wifi_off_rounded,
-
-                    size: 70,
-
-                    color: Color(0xFF2563EB),
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // TITLE
-                const Text(
-                  "No Internet Connection",
-
-                  textAlign: TextAlign.center,
-
-                  style: TextStyle(
-                    fontSize: 28,
-
-                    fontWeight: FontWeight.bold,
-
-                    color: Color(0xFF0F172A),
-
-                    letterSpacing: 0.3,
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                // SUBTITLE
-                const Text(
-                  "Please check your internet connection and try again.",
-
-                  textAlign: TextAlign.center,
-
-                  style: TextStyle(
-                    fontSize: 16,
-
-                    height: 1.5,
-
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-
-                const SizedBox(height: 35),
-
-                // LOADING CARD
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 14,
-                  ),
-
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-
-                    borderRadius: BorderRadius.circular(18),
-
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-
-                    children: [
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-
-                          color: Color(0xFF2563EB),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF4F6EF7).withOpacity(0.15),
+                          blurRadius: 40,
+                          spreadRadius: 6,
                         ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.wifi_off_rounded,
+                      size: 48,
+                      color: Color(0xFF4F6EF7),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 36),
+
+                // Title
+                const Text(
+                  'No Connection',
+                  style: TextStyle(
+                    color: Color(0xFF111827),
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                    height: 1.1,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Subtitle
+                const Text(
+                  "Looks like you're offline.\nCheck your Wi-Fi or mobile data and try again.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF6B7280),
+                    fontSize: 15,
+                    height: 1.6,
+                    letterSpacing: 0.1,
+                  ),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Retry button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _isRetrying ? null : _handleRetry,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4F6EF7),
+                      disabledBackgroundColor:
+                      const Color(0xFF4F6EF7).withOpacity(0.4),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
                       ),
-
-                      SizedBox(width: 14),
-
-                      Text(
-                        "Waiting for connection...",
-
-                        style: TextStyle(
-                          fontSize: 15,
-
-                          fontWeight: FontWeight.w500,
-
-                          color: Color(0xFF334155),
+                    ),
+                    child: _isRetrying
+                        ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor:
+                        AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                        : const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.refresh_rounded, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Try Again',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

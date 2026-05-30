@@ -360,6 +360,54 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_identity_services_web:
+    dependency: transitive
+    description:
+      name: google_identity_services_web
+      sha256: "5d187c46dc59e02646e10fe82665fc3884a9b71bc1c90c2b8b749316d33ee454"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+1"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      sha256: "0b8787cb9c1a68ad398e8010e8c8766bfa33556d2ab97c439fb4137756d7308f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.1"
+  google_sign_in_android:
+    dependency: "direct overridden"
+    description:
+      name: google_sign_in_android
+      sha256: "0608de03fc541ece4f91ba3e01a68b17cce7a6cf42bd59e40bbe5c55cc3a49d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.30"
+  google_sign_in_ios:
+    dependency: "direct overridden"
+    description:
+      name: google_sign_in_ios
+      sha256: a058c9880be456f21e2e8571c1126eaacd570bdc5b6c6d9d15aea4bdf22ca9fe
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.6"
+  google_sign_in_platform_interface:
+    dependency: "direct overridden"
+    description:
+      name: google_sign_in_platform_interface
+      sha256: "95a9e0a8701b5485f2ca330fd1fc6f918f5ce088042ce1019c5e389d8574ae4c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      sha256: "460547beb4962b7623ac0fb8122d6b8268c951cf0b646dd150d60498430e4ded"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.4+4"
   html:
     dependency: transitive
     description:
@@ -640,6 +688,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   rxdart:
     dependency: transitive
     description:

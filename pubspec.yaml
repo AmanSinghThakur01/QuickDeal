@@ -43,6 +43,12 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_native_splash: ^2.4.7
   connectivity_plus: ^7.1.1
+  google_sign_in: 6.2.1
+
+dependency_overrides:
+  google_sign_in_android: 6.1.30    # ← 6.x chahiye, 7.x nahi
+  google_sign_in_ios: 5.7.6         # ← 5.x chahiye
+  google_sign_in_platform_interface: 2.4.0   # ← 2.x chahiye, 3.x nahi
 
 dev_dependencies:
   flutter_test:
