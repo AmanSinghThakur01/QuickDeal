@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quickdeal/views/auth/login_screen.dart';
 import 'package:quickdeal/views/auth/register_screen.dart';
 import 'package:quickdeal/views/home/home_screen.dart';
+import 'package:quickdeal/views/profile/profile_screen.dart';
 import 'app_routes.dart';
 
 class RouteGenerator {
@@ -16,9 +17,9 @@ switch (settings.name) {
       return MaterialPageRoute(
         builder: (_) => const LoginScreen(),
       );
-  case AppRoutes.register:
+  case AppRoutes.profile:
     return MaterialPageRoute(
-      builder: (_) => const RegisterScreen(),
+      builder: (_) => const ProfileScreen(),
     );
 //
 case AppRoutes.home:

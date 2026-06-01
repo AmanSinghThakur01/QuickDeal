@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+
 import '../../core/services/auth_service.dart';
 import '../../models/user_model.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  final AuthService _authService = AuthService();
+
+  final AuthService _authService =
+  AuthService();
 
   UserModel? user;
+
   bool isLoading = false;
 
   AuthViewModel() {
@@ -13,14 +17,26 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   void _syncUser() {
-    final firebaseUser = _authService.currentUser;
+
+    final firebaseUser =
+        _authService.currentUser;
 
     if (firebaseUser != null) {
+
       user = UserModel(
-        uid: firebaseUser.uid,
-        email: firebaseUser.email ?? '',
-        name: firebaseUser.displayName ?? '',
-        photoUrl: firebaseUser.photoURL ?? '',
+
+        uid:
+        firebaseUser.uid,
+
+        email:
+        firebaseUser.email ?? '',
+
+        name:
+        firebaseUser.displayName ?? '',
+
+        photoUrl:
+        firebaseUser.photoURL ?? '',
+
       );
     }
 
@@ -28,33 +44,61 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
+
     isLoading = true;
+
     notifyListeners();
 
     try {
-      final result = await _authService.signInWithGoogle();
 
-      if (result?.user != null) { // ✅ SAFE FIX
+      final result =
+      await _authService
+          .signInWithGoogle();
+
+      if (result?.user != null) {
+
         user = UserModel(
-          uid: result!.user!.uid,
-          email: result.user!.email ?? '',
-          name: result.user!.displayName ?? '',
-          photoUrl: result.user!.photoURL ?? '',
+
+          uid:
+          result!.user!.uid,
+
+          email:
+          result.user!.email ?? '',
+
+          name:
+          result.user!.displayName ?? '',
+
+          photoUrl:
+          result.user!.photoURL ?? '',
+
         );
       }
+
     } catch (e) {
-      debugPrint("Auth Error: $e");
+
+      debugPrint(
+        "Auth Error: $e",
+      );
+
     }
 
     isLoading = false;
+
     notifyListeners();
   }
 
   Future<void> logout() async {
+
     await _authService.signOut();
+
     user = null;
+
     notifyListeners();
   }
 
-  bool get isLoggedIn => user != null;
+  bool get isLoggedIn =>
+      user != null;
+
+  UserModel? get currentUser =>
+      user;
 }

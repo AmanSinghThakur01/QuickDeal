@@ -8,32 +8,52 @@ import 'views/auth/login_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/no_internet/no_internet_screen.dart';
 
-class AppWrapper extends StatelessWidget {
-  final Widget child;
+class AppWrapper
+    extends StatelessWidget {
 
-  const AppWrapper({super.key, required this.child});
+  const AppWrapper({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer2<AuthViewModel, ConnectivityViewModel>(
-      builder: (context, auth, connectivity, _) {
+  Widget build(
+      BuildContext context,
+      ) {
 
-        final isLoggedIn = auth.isLoggedIn;
+    return Consumer2<
+        AuthViewModel,
+        ConnectivityViewModel>(
+
+      builder:
+
+          (
+          context,
+          auth,
+          connectivity,
+          _
+          ) {
 
         return Stack(
-          children: [
-            // ✅ Main screen logic (UNCHANGED LOGIC)
-            isLoggedIn ? const HomeScreen() : const LoginScreen(),
 
-            // ✅ Safe overlay (no crash)
-            if (!connectivity.isConnected)
+          children: [
+
+            auth.isLoggedIn
+                ? const HomeScreen()
+                : const LoginScreen(),
+
+            if (
+            !connectivity
+                .isConnected
+            )
+
               const NoInternetScreen(),
 
-            // optional child (safe usage)
-            child,
           ],
+
         );
+
       },
+
     );
   }
 }
