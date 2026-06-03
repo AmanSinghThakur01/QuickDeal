@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
@@ -21,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _fieldsFilled = false;
 
   @override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -30,7 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final uid = auth.currentUser?.uid;
 
       if (uid != null) {
-        profile.loadUser(uid);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          profile.loadUser(uid);
+        });
       }
 
       _loaded = true;
@@ -193,10 +199,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Photo update coming soon")),
+                    onTap: () async {
+                      final picker = ImagePicker();
+
+                      final pickedFile = await picker.pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 80,
                       );
+
+                      if (pickedFile == null) return;
+
+                      final auth = context.read<AuthViewModel>();
+
+                      final uid = auth.currentUser?.uid;
+
+                      if (uid == null) return;
+
+                      await profile.updatePhoto(
+                        uid: uid,
+                        image: File(pickedFile.path),
+                      );
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Profile photo updated successfully"),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.all(7),

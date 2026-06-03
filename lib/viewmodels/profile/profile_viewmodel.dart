@@ -7,145 +7,61 @@ import '../../core/services/storage_service.dart';
 
 import '../../models/user_model.dart';
 
-class ProfileViewModel
-    extends ChangeNotifier {
+class ProfileViewModel extends ChangeNotifier {
+  final FirestoreService _firestore = FirestoreService();
 
-  final FirestoreService
-  _firestore =
-  FirestoreService();
-
-  final StorageService
-  _storage =
-  StorageService();
+  final StorageService _storage = StorageService();
 
   UserModel? user;
 
-  bool isLoading =
-  false;
+  bool isLoading = false;
 
-  Future<void>
-  loadUser(
-      String uid,
-      ) async {
-
-    isLoading =
-    true;
+  Future<void> loadUser(String uid) async {
+    isLoading = true;
 
     notifyListeners();
 
-    user =
-    await _firestore
-        .getUser(
-      uid,
-    );
+    user = await _firestore.getUser(uid);
 
-    isLoading =
-    false;
+    isLoading = false;
 
     notifyListeners();
   }
 
-  Future<void>
-  updateProfile({
-
+  Future<void> updateProfile({
     required String uid,
 
     required String phone,
 
     required String address,
-
   }) async {
-
-    isLoading =
-    true;
+    isLoading = true;
 
     notifyListeners();
 
-    await _firestore
-        .updateProfile(
+    await _firestore.updateProfile(uid: uid, phone: phone, address: address);
 
-      uid:
-      uid,
+    user = user?.copyWith(phone: phone, address: address);
 
-      phone:
-      phone,
-
-      address:
-      address,
-
-    );
-
-    user =
-        user?.copyWith(
-
-          phone:
-          phone,
-
-          address:
-          address,
-
-        );
-
-    isLoading =
-    false;
+    isLoading = false;
 
     notifyListeners();
   }
 
-  Future<void>
-  updatePhoto({
-
-    required String uid,
-
-    required File image,
-
-  }) async {
-
-    isLoading =
-    true;
+  Future<void> updatePhoto({required String uid, required File image}) async {
+    isLoading = true;
 
     notifyListeners();
 
-    final url =
+    final url = await _storage.uploadProfilePhoto(uid: uid, image: image);
+    print("PHOTO URL => $url");
+    if (url != null) {
+      await _firestore.updatePhoto(uid: uid, url: url);
 
-    await _storage
-        .uploadProfilePhoto(
-
-      uid:
-      uid,
-
-      image:
-      image,
-
-    );
-
-    if (
-    url != null
-    ) {
-
-      await _firestore
-          .updatePhoto(
-
-        uid:
-        uid,
-
-        url:
-        url,
-
-      );
-
-      user =
-          user?.copyWith(
-
-            photoUrl:
-            url,
-
-          );
-
+      user = user?.copyWith(photoUrl: url);
     }
 
-    isLoading =
-    false;
+    isLoading = false;
 
     notifyListeners();
   }

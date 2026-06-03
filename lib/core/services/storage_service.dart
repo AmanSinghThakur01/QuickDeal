@@ -41,7 +41,7 @@ class StorageService {
       return url;
 
     } catch (e) {
-
+      print("UPLOAD ERROR => $e");
       return null;
 
     }
