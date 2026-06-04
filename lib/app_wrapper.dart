@@ -5,7 +5,7 @@ import 'viewmodels/auth/auth_viewmodel.dart';
 import 'viewmodels/connectivity/connectivity_viewmodel.dart';
 
 import 'views/auth/login_screen.dart';
-import 'views/home/home_screen.dart';
+import 'views/bottom_nav/bottom_nav_screen.dart';
 import 'views/no_internet/no_internet_screen.dart';
 
 class AppWrapper
@@ -38,7 +38,7 @@ class AppWrapper
           children: [
 
             auth.isLoggedIn
-                ? const HomeScreen()
+                ? const BottomNavScreen()
                 : const LoginScreen(),
 
             if (

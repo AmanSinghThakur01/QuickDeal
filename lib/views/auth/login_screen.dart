@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_colors.dart';
 import '../../viewmodels/auth/auth_viewmodel.dart';
 import '../../widgets/custom_button.dart';
 
@@ -20,12 +21,13 @@ class LoginScreen extends StatelessWidget {
             children: [
               const Spacer(),
 
-              /// 🔥 App Title
+              /// App Title
               const Text(
                 "QuickDeal",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
               ),
 
@@ -35,17 +37,17 @@ class LoginScreen extends StatelessWidget {
                 "Login to continue",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: AppColors.secondary,
                 ),
               ),
 
               const SizedBox(height: 50),
 
-              /// 🔵 Google Login Button
               authVM.isLoading
-                  ? const CircularProgressIndicator()
-                  :
-              CustomButton(
+                  ? const CircularProgressIndicator(
+                color: AppColors.primary,
+              )
+                  : CustomButton(
                 text: "Continue with Google",
                 icon: Icons.g_mobiledata,
                 isLoading: authVM.isLoading,
@@ -53,17 +55,23 @@ class LoginScreen extends StatelessWidget {
                   await authVM.signInWithGoogle();
 
                   if (authVM.isLoggedIn && context.mounted) {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacementNamed(
+                      context,
+                      '/home',
+                    );
                   }
                 },
-              )
-,
+              ),
+
               const SizedBox(height: 20),
 
               const Text(
                 "By continuing, you agree to our Terms & Privacy Policy",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.secondary,
+                ),
               ),
 
               const Spacer(),

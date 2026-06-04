@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:quickdeal/core/constants/app_colors.dart';
+import 'package:quickdeal/viewmodels/bottom_nav/bottom_nav_viewmodel.dart';
 import 'package:quickdeal/viewmodels/profile/profile_viewmodel.dart';
 
 import 'firebase_options.dart';
@@ -15,67 +17,56 @@ import 'core/routes/router_generator.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options:
-    DefaultFirebaseOptions
-        .currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
-  const MyApp({
-    super.key,
-  });
+  const MyApp({super.key});
 
   @override
-  Widget build(
-      BuildContext context,
-      ) {
-
+  Widget build(BuildContext context) {
     return MultiProvider(
-
       providers: [
+        ChangeNotifierProvider(create: (_) => ConnectivityViewModel()),
 
-        ChangeNotifierProvider(
-          create:
-              (_) =>
-              ConnectivityViewModel(),
-        ),
-
-        ChangeNotifierProvider(
-          create:
-              (_) =>
-              AuthViewModel(),
-        ),       ChangeNotifierProvider(
-          create:
-              (_) =>
-              ProfileViewModel(),
-        ),
-
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (_) => BottomNavViewModel()),
       ],
 
-      child: MaterialApp(
+      child:
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
 
-        debugShowCheckedModeBanner:
-        false,
+        title: "QuickDeal",
 
-        title:
-        "QuickDeal",
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.background,
+          primaryColor: AppColors.primary,
 
-        onGenerateRoute:
-        RouteGenerator
-            .generateRoute,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
 
-        home:
-        const AppWrapper(),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
 
+        onGenerateRoute: RouteGenerator.generateRoute,
+
+        home: const AppWrapper(),
       ),
-
     );
   }
 }
